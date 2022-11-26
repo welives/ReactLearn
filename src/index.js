@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import Demo from './Demo'
 
 // render(要渲染的组件, 组件的挂载点)
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Demo />
   </React.StrictMode>,
   document.getElementById('root')
 )

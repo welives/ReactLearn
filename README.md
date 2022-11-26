@@ -1,70 +1,95 @@
-# Getting Started with Create React App
+# React16 学习
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 组件定义
+```
+/**
+ * 旧版react的组件写法
+ */
+class App extends Component {
+  /**
+   * JSX写法: 支持在js代码中书写html代码
+   * 简单的概括就是: 遇到<>包裹的代码解析成html代码, 遇到{}包裹的代码解析成js代码
+   */
+  render() {
+    return <div className="test">Hello {true ? 'Jandan' : 'World'}</div>
+  }
+}
+```
 
-## Available Scripts
+## 定义响应式变量
+```
+class App extends Component {
+  /**
+   * 用途: 1)初始化props  2)初始化state,但此时不能调用setState  3)用来写bind this
+   * @param {any} props 来自父元素的属性
+   */
+  constructor(props) {
+    super(props)
+    /**
+     * 定义响应式变量, 这里的state 类似vue中的 data
+     */
+    this.state = {
+      inputValue: '',
+      list: []
+    }
+  }
+}
+```
 
-In the project directory, you can run:
+## 响应式变量的赋值操作
+```
+class App extends Component {
+  inputChange(e) {
+    // react16 要加事件池, 从react17 开始废除事件池
+    e.persist()
 
-### `npm start`
+    // 这样写是无效的,不能直接操作state中的变量,要始终通过setState来更新变量
+    // this.state.inputValue = e.target.value
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+    // 要这样写才行,是不是觉得和原生小程序很像
+    this.setState({
+      inputValue: e.target.value
+    })
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    // 或者这种函数的写法
+    this.setState((state) => ({
+      inputValue: e.target.value
+    }))
+  }
+}
+```
 
-### `npm test`
+## class组件中的this指向问题
+```
+class App extends Component {
+  /**
+   * 关于在react中class组件的this指向问题的总结
+   * 先明确一些基础概念:
+   * ① 类中的方法是挂在类实例的原型对象上的。
+   * ② 类中的方法中是严格模式的。
+   * ③ 使用类的实例调用类中的方法，this指向的是类的实例
+   * 根据React中类组件的内部原理可知，React的类组件由React对其进行实例化，所以在React类组件内部的this指向都是当前组件的实例化对象。
+   * 以 onChange={this.inputChange}为例，在这里，React的事件处理相当于一个赋值函数。其过程是onChange通过this找到了原型链上的inputChange函数，当onChange被触发的时候，直接执行inputChange相当于inputChange()。此时的this为undefined，而不是windows的原因就是上诉的概念②
+   *
+   * 要解决这个this指向问题，有三种办法
+   * ① 可以使用bind()将该方法绑定给指向类组件实例对象的this，即 onChange={this.inputChange.bind(this)}
+   * ② 可以使用箭头函数把实例方法包装起来，即 onChange={(e) => this.inputChange(e)}
+   * ③ 在定义方法的时候使用箭头函数，即 inputChange = () => {}
+   */
+  inputChange(e) {
+    console.log(this)
+  }
+  handleClick = (e) => {
+    console.log(this)
+  }
+}
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 渲染html标签使用 dangerouslySetInnerHTML 属性(等效vue中的v-html)
+```
+<li
+  onClick={() => this.handleRemove(index)}
+  key={index}
+  dangerouslySetInnerHTML={{ __html: el }}
+></li>
+```
