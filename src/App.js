@@ -1,26 +1,16 @@
-import React from 'react'
-import logo from './logo.svg'
-import './App.css'
+import React, { Component } from 'react'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  )
+/**
+ * 旧版react的组件写法
+ */
+class App extends Component {
+  /**
+   * JSX写法: 支持在js代码中书写html代码
+   * 简单的概括就是: 遇到<>包裹的代码解析成html代码, 遇到{}包裹的代码解析成js代码
+   */
+  render() {
+    return <div className="test">Hello {true ? 'Jandan' : 'World'}</div>
+  }
 }
 
 export default App
