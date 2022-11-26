@@ -1,7 +1,7 @@
 # React16 学习
 
 ## 组件定义
-```
+```js
 /**
  * 旧版react的组件写法
  */
@@ -17,7 +17,7 @@ class App extends Component {
 ```
 
 ## 定义响应式变量
-```
+```js
 class App extends Component {
   /**
    * 用途: 1)初始化props  2)初始化state,但此时不能调用setState  3)用来写bind this
@@ -37,7 +37,7 @@ class App extends Component {
 ```
 
 ## 响应式变量的赋值操作
-```
+```js
 class App extends Component {
   inputChange(e) {
     // react16 要加事件池, 从react17 开始废除事件池
@@ -60,7 +60,7 @@ class App extends Component {
 ```
 
 ## class组件中的this指向问题
-```
+```js
 class App extends Component {
   /**
    * 关于在react中class组件的this指向问题的总结
@@ -86,10 +86,106 @@ class App extends Component {
 ```
 
 ### 渲染html标签使用 dangerouslySetInnerHTML 属性(等效vue中的v-html)
+```js
+
+class Demo extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      list: ['西瓜', '荔枝', '木瓜']
+    }
+  }
+  handleRemove(index) {
+    const list = this.state.list
+    list.splice(index, 1)
+    this.setState({
+      list: list
+    })
+  }
+  render() {
+    return (
+      <ul>
+        {this.state.list.map((el, index) => (
+          <li
+            onClick={() => this.handleRemove(index)}
+            key={index}
+            dangerouslySetInnerHTML={{ __html: el }}
+          ></li>
+        ))}
+      </ul>
+    )
+  }
+}
 ```
-<li
-  onClick={() => this.handleRemove(index)}
-  key={index}
-  dangerouslySetInnerHTML={{ __html: el }}
-></li>
+
+## 父组件通过props往子组件传值
+```js
+class Demo extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      list: ['西瓜', '荔枝', '木瓜']
+    }
+  }
+  handleRemove(index) {
+    const list = this.state.list
+    list.splice(index, 1)
+    this.setState({
+      list: list
+    })
+  }
+  render() {
+    return (
+      <ul>
+        {this.state.list.map((el, index) => (
+          <DemoChild
+            content={el}
+            index={index}
+            key={index}
+            removeItem={() => this.handleRemove(index)}
+          ></DemoChild>
+        ))}
+      </ul>
+    )
+  }
+}
+```
+
+## 子组件不能直接修改props的值(单向数据流)
+```js
+class DemoChild extends Component {
+  constructor(props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+  }
+  handleClick() {
+    // 通过props传递进来的方法来操作父组件中的变量
+    this.props.removeItem(this.props.index)
+  }
+  render() {
+    return (
+      <>
+        <li
+          onClick={this.handleClick}
+          dangerouslySetInnerHTML={{ __html: this.props.content }}
+        ></li>
+      </>
+    )
+  }
+}
+```
+
+## props类型校验
+```js
+import PropTypes from 'prop-types'
+
+DemoChild.propTypes = {
+  place: PropTypes.string,
+  content: PropTypes.string.isRequired,
+  index: PropTypes.number,
+  removeItem: PropTypes.func
+}
+DemoChild.defaultProps = {
+  place: '广西'
+}
 ```

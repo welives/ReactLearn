@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import DemoChild from './components/DemoChild'
 
 class Demo extends Component {
   /**
@@ -12,7 +13,7 @@ class Demo extends Component {
      */
     this.state = {
       inputValue: '',
-      list: ['头部按摩', '精油推背']
+      list: ['西瓜', '荔枝', '木瓜']
     }
   }
 
@@ -84,11 +85,19 @@ class Demo extends Component {
         </div>
         <ul>
           {this.state.list.map((el, index) => (
-            <li
+            /*
+             <li
               onClick={() => this.handleRemove(index)}
               key={index}
               dangerouslySetInnerHTML={{ __html: el }}
-            ></li>
+              ></li>
+             */
+            <DemoChild
+              content={el}
+              index={index}
+              key={index}
+              removeItem={() => this.handleRemove(index)}
+            ></DemoChild>
           ))}
         </ul>
       </div>
