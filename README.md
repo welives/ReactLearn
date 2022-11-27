@@ -85,7 +85,7 @@ class App extends Component {
 }
 ```
 
-### 渲染html标签使用 dangerouslySetInnerHTML 属性(等效vue中的v-html)
+## 渲染html标签使用 dangerouslySetInnerHTML 属性(等效vue中的v-html)
 ```js
 
 class Demo extends Component {
@@ -187,5 +187,73 @@ DemoChild.propTypes = {
 }
 DemoChild.defaultProps = {
   place: '广西'
+}
+```
+
+## ref操作DOM(尽量避免使用, 有性能问题和增加维护成本)
+```js
+class Demo extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      inputValue: '',
+      list: ['西瓜', '荔枝', '木瓜']
+    }
+    // react16.3版本之后,通过此方法来创建ref, 然后赋值给一个变量, 通过该ref变量的current属性可以拿到DOM节点或组件的实例
+    this.ulDOM = React.createRef()
+  }
+  inputChange(e) {
+    this.setState({
+      inputValue: this.input.value
+    })
+  }
+  handleClick = () => {
+    this.setState(
+      {
+        inputValue: '',
+        list: [...this.state.list, this.state.inputValue]
+      },
+      () => {
+        /**
+         * 通过setState的回调函数, 就能访问到DOM更新后的数据了
+         * 在Vue中要达到同样的效果则是使用 this.$nextTick()
+         */
+        console.log(this.ulDOM.current.querySelectorAll('li').length)
+      }
+    )
+    // 这样访问到的是DOM更新前的数据, 因为 setState是异步的
+    // console.log(this.ulDOM.current.querySelectorAll('li').length)
+  }
+  render() {
+    return (
+      <div>
+        <div>
+          {/* 在react16.3之前的写法①, 但这种写法在入口文件的根节点渲染时不能使用严格模式, 通过 this.refs.label 这种形式访问DOM节点 */}
+          <label ref="label" htmlFor="add">
+            增加服务：
+          </label>
+          <input
+            id="add"
+            type="text"
+            value={this.state.inputValue}
+            onChange={this.inputChange.bind(this)}
+            // 在react16.3之前的写法②, 通过this.input 这种形式访问DOM节点
+            ref={(input) => (this.input = input)}
+          />
+          <button onClick={this.handleClick}>增加</button>
+        </div>
+        {/* react16.3版本之后, 将创建的ref变量挂载到DOM节点或组件上 */}
+        <ul ref={this.ulDOM}>
+          {this.state.list.map((el, index) => (
+            <li
+            onClick={() => this.handleRemove(index)}
+            key={index}
+            dangerouslySetInnerHTML={{ __html: el }}
+            ></li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
 }
 ```
