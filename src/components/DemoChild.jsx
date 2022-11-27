@@ -10,6 +10,13 @@ class DemoChild extends Component {
     // 通过props传递进来的方法来操作父组件中的变量
     this.props.removeItem(this.props.index)
   }
+  // 子组件渲染优化
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.content !== this.props.content) {
+      return true
+    }
+    return false
+  }
   render() {
     return (
       <>
