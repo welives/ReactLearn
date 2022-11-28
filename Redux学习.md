@@ -1,0 +1,7 @@
+# Redux学习
+
+① React Components中如果有状态的话就会去Action Creators请求状态
+② 但Action Creators中实际是不保存状态的,这时候就会去Store中查找
+③ 而在Store当中也是不保存状态的,这时候则会去Reducer里面查找
+④ Reducer中查找到所需要的状态后返回给Store
+⑤ Store拿到查找的状态后再返回给React Components

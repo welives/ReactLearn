@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import DemoChild from './components/DemoChild'
+import DemoChild from '../components/DemoChild'
 
 class Demo extends Component {
   /**
