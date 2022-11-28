@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import Demo from './pages/Demo'
+// import Demo from './pages/Demo'
+import TodoList from './pages/TodoList'
+import './App.css'
 
 /**
  * 旧版react的组件写法
@@ -11,9 +13,9 @@ class App extends Component {
    */
   render() {
     return (
-      <div className="test">
-        Hello {true ? 'Jandan' : 'World'}
-        <Demo></Demo>
+      <div>
+        {/* <Demo></Demo> */}
+        <TodoList></TodoList>
       </div>
     )
   }

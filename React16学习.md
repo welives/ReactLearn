@@ -1,6 +1,19 @@
 # React16 学习
 
-## 入口文件 index.js
+## 项目创建
+在命令行终端执行如下命令便可以生成一个名为Learn的最新版本React工程
+```
+npx create-react-app Learn
+```
+<font color=red>本文档创建时，React已经发布到18.2了，所以需要对脚手架创建的工程依赖进行降级，步骤如下：</font>
+- ① 删除工程目录下的`node_modules`文件夹
+- ② 清理package.json中React16的非必需依赖，只保留react、react-dom和react-scripts
+- ③ 重新安装React16的某个版本，例如：
+```
+npm i react@16.8.6 react-dom@16.8.6 react-scripts@3.0.0
+```
+
+- ④ 修改入口文件 index.js
 ```js
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -15,6 +28,10 @@ ReactDOM.render(
   document.getElementById('root')
 )
 ```
+
+<font color=red>到这里，一个干净的React16工程就创建完毕了</font>
+
+------
 
 ## 组件定义
 ```js
