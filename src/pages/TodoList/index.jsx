@@ -40,6 +40,14 @@ class TodoList extends Component {
   componentDidMount() {
     // 组件挂载完成后订阅Redux的状态变化
     store.subscribe(this.storeChange)
+    fetch(
+      'https://mock.mengxuegu.com/mock/6385a5229433403d6c068a17/example/react_learn'
+    ).then(async (res) => {
+      const { status, result } = await res.json()
+      if (status === 'success') {
+        store.dispatch(Actions.getList(result.data))
+      }
+    })
   }
 }
 

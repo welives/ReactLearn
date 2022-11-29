@@ -50,29 +50,25 @@ export default store
 // reducer.js 文件
 const defaultState = {
   inputValue: '',
-  list: [
-    '8点起床',
-    '刷牙洗脸',
-    '出门买早餐',
-    '搭车去上班',
-    '到公司开始摸鱼',
-    '吃午餐',
-    '午休',
-    '下午继续摸鱼',
-    '下班回家',
-  ],
+  list: [],
 }
 export default (state = defaultState, action) => {
   // Reducer里的state是只读，切忌严禁在这里修改state的值
   // 通过action.type来判断要进行的操作
   const nextState = Object.assign({}, state)
   switch (action.type) {
+    case 'getList':
+      nextState.list = action.value
+      return nextState
     case 'inputChange':
-      nextState.inputValue = action.payload
+      nextState.inputValue = action.value
       return nextState
     case 'addTodoItem':
-      nextState.list.push(state.inputValue)
+      nextState.list.push(action.value)
       nextState.inputValue = ''
+      return nextState
+    case 'removeTodoItem':
+      nextState.list.splice(action.value, 1)
       return nextState
     default:
       return state
@@ -93,14 +89,17 @@ class TodoList extends Component {
     const action = {
       // 必填项,用来告诉Redux本次action要修改的是哪个state
       type: 'inputChange',
-      // 非必需,不一定非要叫payload,也可以是data或者value之类你喜欢的键名,用来传递新的state值
-      payload: e.target.value,
+      // 非必需,不一定非要叫value,也可以叫data或者其他你喜欢的键名,用来传递新的state值
+      value: e.target.value,
     }
     // 通过dispatch分发state变更操作到Store
     store.dispatch(action)
   }
   handleClick() {
-    store.dispatch({ type: 'addTodoItem' })
+    store.dispatch({ type: 'addTodoItem', value: this.state.inputValue })
+  }
+  handleRemove(index) {
+    store.dispatch({ type: 'removeTodoItem', value: index })
   }
   storeChange() {
     this.setState(store.getState())
@@ -127,7 +126,11 @@ class TodoList extends Component {
           <List
             bordered
             dataSource={this.state.list}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
+            renderItem={(item, index) => (
+              <List.Item onClick={this.handleRemove.bind(this, index)}>
+                {item}
+              </List.Item>
+            )}
           ></List>
         </div>
       </div>
@@ -136,6 +139,20 @@ class TodoList extends Component {
   componentDidMount() {
     // 组件挂载完成后订阅Redux的状态变化
     store.subscribe(this.storeChange)
+    store.dispatch({
+      type: 'getList',
+      value: [
+        '8点起床',
+        '刷牙洗脸',
+        '出门买早餐',
+        '搭车去上班',
+        '到公司开始摸鱼',
+        '吃午餐',
+        '午休',
+        '下午继续摸鱼',
+        '下班回家',
+      ],
+    })
   }
 }
 ```

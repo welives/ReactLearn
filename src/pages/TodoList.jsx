@@ -60,6 +60,19 @@ class TodoList extends Component {
   componentDidMount() {
     // 组件挂载完成后订阅Redux的状态变化
     store.subscribe(this.storeChange)
+    store.dispatch(
+      Actions.getList([
+        '8点起床',
+        '刷牙洗脸',
+        '出门买早餐',
+        '搭车去上班',
+        '到公司开始摸鱼',
+        '吃午餐',
+        '午休',
+        '下午继续摸鱼',
+        '下班回家',
+      ])
+    )
   }
 }
 
