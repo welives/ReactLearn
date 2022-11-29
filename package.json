@@ -6,6 +6,7 @@
     "antd": "^3.26.20",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-redux": "^8.0.5",
     "react-scripts": "^3.0.0",
     "redux": "^4.2.0",
     "redux-saga": "^1.2.1",

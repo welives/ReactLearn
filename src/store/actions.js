@@ -19,7 +19,7 @@ class Actions {
     ).then(async (res) => {
       const { status, result } = await res.json()
       if (status === 'success') {
-        // 这里的 getListAsync 方法返回的是一个闭包，而这个闭包的执行作用域是在store.dispatch内部，dispatch是由redux-thunk处理后提供的
+        // 这里之所以能够直接使用dispatch是因为redux-thunk对store.dispatch进行了一层封装，而getListAsync方法返回的是一个执行作用域在store.dispatch内部的闭包
         dispatch(this.getList(result.data))
       }
     })

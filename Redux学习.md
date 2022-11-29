@@ -53,8 +53,8 @@ export default store
 - 如果你每次传入的参数一样，但是返回的结果不一样，则不是一个纯函数
 
 ## Redux中的数据操作
+reducer
 ```js
-// reducer.js 文件
 const defaultState = {
   inputValue: '',
   list: [],
@@ -63,33 +63,34 @@ export default (state = defaultState, action) => {
   // Reducer里的state是只读属性，严禁在这里修改state的值，因为它是一个纯函数
   // 通过action.type来判断要进行的操作
   const nextState = Object.assign({}, state)
+  const list = [...nextState.list]
   switch (action.type) {
     case 'getList':
-      nextState.list = action.value
-      return nextState
+      return { ...nextState, list: [...action.value] }
     case 'inputChange':
       nextState.inputValue = action.value
       return nextState
     case 'addTodoItem':
-      nextState.list.push(action.value)
+      list.push(action.value)
       nextState.inputValue = ''
-      return nextState
+      return { ...nextState, list: list }
     case 'removeTodoItem':
-      nextState.list.splice(action.value, 1)
-      return nextState
+      list.splice(action.value, 1)
+      return { ...nextState, list: list }
     default:
       return state
   }
 }
+```
 
-// TodoList组件
+TodoList组件
+```js
 class TodoList extends Component {
   constructor(props) {
     super(props)
     // 通过getState获取Redux中的数据
     this.state = store.getState()
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleClick = this.handleClick.bind(this)
     this.storeChange = this.storeChange.bind(this)
   }
   handleInputChange(e) {
@@ -102,8 +103,8 @@ class TodoList extends Component {
     // 通过dispatch分发state变更操作到Store
     store.dispatch(action)
   }
-  handleClick() {
-    store.dispatch({ type: 'addTodoItem', value: this.state.inputValue })
+  handleClick(value) {
+    store.dispatch({ type: 'addTodoItem', value })
   }
   handleRemove(index) {
     store.dispatch({ type: 'removeTodoItem', value: index })
@@ -124,7 +125,7 @@ class TodoList extends Component {
           <Button
             type="primary"
             style={{ marginLeft: '10px' }}
-            onClick={this.handleClick}
+            onClick={this.handleClick.bind(this, this.state.inputValue)}
           >
             增加
           </Button>
@@ -174,8 +175,8 @@ npm i redux-thunk
 
 <font color=red>配置：</font>
 
+编辑 index.js
 ```js
-// 编辑 index.js
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import reducer from './reducer'
@@ -219,7 +220,7 @@ class Actions {
     ).then(async (res) => {
       const { status, result } = await res.json()
       if (status === 'success') {
-        // 这里的 getListAsync 方法返回的是一个闭包，而这个闭包的执行作用域是在store.dispatch内部，dispatch是由redux-thunk处理后提供的
+        // 这里之所以能够直接使用dispatch是因为redux-thunk对store.dispatch进行了一层封装，而getListAsync方法返回的是一个执行作用域在store.dispatch内部的闭包
         dispatch(this.getList(result.data))
       }
     })
@@ -237,11 +238,13 @@ npm i redux-saga
 
 <font color=red>配置：</font>
 
+① 在store目录下新建 sagas.js
 ```js
-// 在store目录下新建 sagas.js
 export default function* saga() {}
+```
 
-// 编辑 index.js
+② 编辑 index.js
+```js
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import reducer from './reducer'
@@ -296,3 +299,87 @@ class TodoList extends Component {
   ...
 }
 ```
+
+------
+
+## react-redux的安装和使用
+项目根目录下打开命令行终端，执行下面的命令进行安装
+```
+npm i react-redux
+```
+
+<font color=red>使用：</font>
+
+① react入口文件
+```js
+import { Provider } from 'react-redux'
+import store from './store/index'
+...
+
+ReactDOM.render(
+  // 将Provider作为整个应用的根组件，并获取store作为其props，以便后续进行下发处理
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
+```
+
+② 需要使用state的组件
+```js
+import { connect } from 'react-redux'
+...
+function TodoList(props) {
+  const { inputValue, list, handleInputChange, handleClick, handleRemove } =
+    props
+  return (
+    <TodoListUI
+      inputValue={inputValue}
+      list={list}
+      handleInputChange={handleInputChange}
+      handleClick={handleClick}
+      handleRemove={handleRemove}
+    ></TodoListUI>
+  )
+}
+
+/**
+ * 把Redux中的state映射成组件所需要的props
+ * @param {Object} state Redux中的state
+ */
+function mapStateToProps(state) {
+  return {
+    inputValue: state.inputValue,
+    list: state.list,
+  }
+}
+
+/**
+ * 把dispatch映射成组件所需要的props
+ * @param {Function} dispatch
+ */
+function mapDispatchToProps(dispatch) {
+  dispatch(Actions.getListAsync())
+  return {
+    handleInputChange(e) {
+      dispatch(Actions.inputChange(e.target.value))
+    },
+    handleClick(e) {
+      dispatch(Actions.addTodoItem(e))
+    },
+    handleRemove(index) {
+      dispatch(Actions.removeTodoItem(index))
+    },
+  }
+}
+
+/**
+ * connect 函数的返回值是一个 WrappedComponent 组件
+ * connect 是典型的柯里化函数，它执行两次，第一次是设置参数；第二次是接收一个正常的 展示组件，并在该组件的基础上返回一个容器组件 WrappedComponent。这其实是一种高阶组件（HOC）的用法
+ */
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList)
+```
+
+## 使用react-redux后，组件的变化
+### ① 类组件可以把内部的state和各种操作方法进行解耦，根据解耦情况可以将组件转变为无状态组件
+### ② 不再需要对状态进行subscribe和getState

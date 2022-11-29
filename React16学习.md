@@ -369,19 +369,21 @@ class Demo extends Component {
 - 因为函数的运行速度优于类，所以适合用于表现层
 ```js
 export default function (props) {
+  const { inputValue, list, handleInputChange, handleClick, handleRemove } =
+    props
   return (
     <div style={{ margin: '10px' }}>
       <div>
         <Input
           placeholder="写点什么吧"
           style={{ width: '250px' }}
-          onChange={props.handleInputChange}
-          value={props.inputValue}
+          onChange={handleInputChange}
+          value={inputValue}
         ></Input>
         <Button
           type="primary"
           style={{ marginLeft: '10px' }}
-          onClick={props.handleClick}
+          onClick={() => handleClick(inputValue)}
         >
           增加
         </Button>
@@ -389,11 +391,9 @@ export default function (props) {
       <div style={{ marginTop: '10px' }}>
         <List
           bordered
-          dataSource={props.list}
+          dataSource={list}
           renderItem={(item, index) => (
-            <List.Item onClick={() => props.handleRemove(index)}>
-              {item}
-            </List.Item>
+            <List.Item onClick={() => handleRemove(index)}>{item}</List.Item>
           )}
         ></List>
       </div>
@@ -431,3 +431,10 @@ class TodoList extends Component {
   }
 }
 ```
+
+|区别|函数组件|类组件|
+|:--:|------|------|
+|语法|由函数定义|由类定义，继承自React.Component|
+|状态管理|无状态，不能使用setState()|组件之间访问store并维持状态|
+|生命周期|不能使用|可以使用|
+|调用方式|无需实例化|实例化|
