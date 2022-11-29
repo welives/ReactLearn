@@ -102,10 +102,9 @@ class App extends Component {
    * 根据React中类组件的内部原理可知，React的类组件由React对其进行实例化，所以在React类组件内部的this指向都是当前组件的实例化对象。
    * 以 onChange={this.inputChange}为例，在这里，React的事件处理相当于一个赋值函数。其过程是onChange通过this找到了原型链上的inputChange函数，当onChange被触发的时候，直接执行inputChange相当于inputChange()。此时的this为undefined，而不是windows的原因就是上诉的概念②
    *
-   * 要解决这个this指向问题，有三种办法
+   * 要解决这个this指向问题，有两种办法
    * ① 可以使用bind()将该方法绑定给指向类组件实例对象的this，即 onChange={this.inputChange.bind(this)}
-   * ② 可以使用箭头函数把实例方法包装起来，即 onChange={() => this.inputChange()}
-   * ③ 在定义方法的时候使用箭头函数，即 inputChange = () => {}
+   * ② 在定义方法的时候使用箭头函数，即 inputChange = () => {}
    */
   inputChange(e) {
     console.log(this)
@@ -362,3 +361,73 @@ class Demo extends Component {
 - <font color=#00d8ff>componentDidUpdate</font> 没变
 ### ③ 卸载阶段 Unmounting
 - <font color=#00d8ff>componentWIllUnmount</font> 没变
+
+------
+
+## 无状态组件
+- 当一个组件只有一个render函数的时候，就可以用无状态组件来定义这个组件。无状态组件其实就是一个函数。只接收props作为参数，没有state，没有生命周期，props就是父组件传递过来的数据，要求返回一段JSX。
+- 因为函数的运行速度优于类，所以适合用于表现层
+```js
+export default function (props) {
+  return (
+    <div style={{ margin: '10px' }}>
+      <div>
+        <Input
+          placeholder="写点什么吧"
+          style={{ width: '250px' }}
+          onChange={props.handleInputChange}
+          value={props.inputValue}
+        ></Input>
+        <Button
+          type="primary"
+          style={{ marginLeft: '10px' }}
+          onClick={props.handleClick}
+        >
+          增加
+        </Button>
+      </div>
+      <div style={{ marginTop: '10px' }}>
+        <List
+          bordered
+          dataSource={props.list}
+          renderItem={(item, index) => (
+            <List.Item onClick={() => props.handleRemove(index)}>
+              {item}
+            </List.Item>
+          )}
+        ></List>
+      </div>
+    </div>
+  )
+}
+```
+
+## 有状态组件
+- 通常来说，类组件就是有状态组件，因为可以定义各种state和使用生命周期
+- 因为类组件能够维护自身内部的数据(状态)，所以适合用于逻辑层和数据层
+```js
+class TodoList extends Component {
+  constructor(props) {
+    super(props)
+    this.state = store.getState()
+    ...
+  }
+
+  ...
+
+  render() {
+    return (
+      <TodoListUI
+        inputValue={this.state.inputValue}
+        list={this.state.list}
+        handleInputChange={this.handleInputChange}
+        handleClick={this.handleClick}
+        handleRemove={this.handleRemove}
+      ></TodoListUI>
+    )
+  }
+  componentDidMount() {
+    ...
+  }
+}
+```

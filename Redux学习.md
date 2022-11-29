@@ -45,6 +45,12 @@ export default store
 
 ------
 
+## reducer必须是一个纯函数
+### 纯函数的概念：
+- 纯函数每一次调用时传入同样的参数，返回的都是同样的结果；它不会改变参数的值，也不会改变外部变量的值；它不会依赖于外部的变量，仅依赖于你传入的参数
+- 纯函数没有其他副作用
+- 如果你每次传入的参数一样，但是返回的结果不一样，则不是一个纯函数
+
 ## Redux中的数据操作
 ```js
 // reducer.js 文件
@@ -53,7 +59,7 @@ const defaultState = {
   list: [],
 }
 export default (state = defaultState, action) => {
-  // Reducer里的state是只读，切忌严禁在这里修改state的值
+  // Reducer里的state是只读属性，严禁在这里修改state的值，因为它是一个纯函数
   // 通过action.type来判断要进行的操作
   const nextState = Object.assign({}, state)
   switch (action.type) {
