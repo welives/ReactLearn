@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-// import Demo from './pages/Demo'
+// import Demo from './pages/Demo/index'
+// import TodoList from './components/TodoList'
 import TodoList from './pages/TodoList/index'
 import './App.css'
 
