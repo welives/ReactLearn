@@ -162,3 +162,73 @@ class TodoList extends Component {
   }
 }
 ```
+
+## redux-thunk的安装和配置
+项目根目录下打开命令行终端，执行下面的命令进行安装
+```
+npm i redux-thunk
+```
+配置：
+```js
+import { createStore, applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
+import reducer from './reducer'
+
+// 判断redux浏览器插件和redux包中哪个有组合函数
+const reduxCompose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+  : compose
+
+const store = createStore(reducer, reduxCompose(applyMiddleware(thunk)))
+
+export default store
+```
+
+## redux-thunk的使用
+```js
+class TodoList extends Component {
+  ...
+  componentDidMount() {
+    // 组件挂载完成后订阅Redux的状态变化
+    store.subscribe(this.storeChange)
+    fetch(
+      'https://mock.mengxuegu.com/mock/6385a5229433403d6c068a17/example/react_learn'
+    ).then(async (res) => {
+      const { status, result } = await res.json()
+      if (status === 'success') {
+        store.dispatch(Actions.getList(result.data))
+      }
+    })
+  }
+  ...
+}
+// ① 把TodoList组件生命周期中的异步请求改成如下
+  componentDidMount() {
+    // 组件挂载完成后订阅Redux的状态变化
+    store.subscribe(this.storeChange)
+    store.dispatch(Actions.getListAsync())
+  }
+```
+
+② 把原先生命周期中的异步请求放到 action 中执行
+```js
+import { INPUT_CHANGE, ADD_TODO_ITEM, REMOVE_TODO_ITEM, GET_LIST } from './actionTypes'
+
+class Actions {
+  inputChange = (value) => ({ type: INPUT_CHANGE, value })
+  addTodoItem = (value) => ({ type: ADD_TODO_ITEM, value })
+  removeTodoItem = (value) => ({ type: REMOVE_TODO_ITEM, value })
+  getList = (value) => ({ type: GET_LIST, value })
+  getListAsync = () => (dispatch) => {
+    fetch(
+      'https://mock.mengxuegu.com/mock/6385a5229433403d6c068a17/example/react_learn'
+    ).then(async (res) => {
+      const { status, result } = await res.json()
+      if (status === 'success') {
+        // 这里的 getListAsync 方法返回的是一个闭包，而这个闭包的执行作用域是在store.dispatch内部，dispatch是由redux-thunk处理后提供的
+        dispatch(this.getList(result.data))
+      }
+    })
+  }
+}
+```
