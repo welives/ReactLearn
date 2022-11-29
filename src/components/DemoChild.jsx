@@ -23,7 +23,7 @@ class DemoChild extends Component {
         <li
           onClick={this.handleClick}
           dangerouslySetInnerHTML={{
-            __html: this.props.place + this.props.content
+            __html: this.props.place + this.props.content,
           }}
         ></li>
       </>
@@ -36,10 +36,10 @@ DemoChild.propTypes = {
   place: PropTypes.string,
   content: PropTypes.string.isRequired,
   index: PropTypes.number,
-  removeItem: PropTypes.func
+  removeItem: PropTypes.func,
 }
 DemoChild.defaultProps = {
-  place: '广西'
+  place: '广西',
 }
 
 export default DemoChild

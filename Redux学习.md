@@ -43,6 +43,8 @@ export default store
 ### ⑤ 在Reducer上进行相应的action操作并返回结果给Store
 ### ⑥ 组件就可以通过Store的API进行获取操作返回的结果
 
+------
+
 ## Redux中的数据操作
 ```js
 // reducer.js 文件
@@ -60,20 +62,20 @@ const defaultState = {
     '下班回家',
   ],
 }
-export default (prevState = defaultState, action) => {
+export default (state = defaultState, action) => {
   // Reducer里的state是只读，切忌严禁在这里修改state的值
   // 通过action.type来判断要进行的操作
-  const nextState = Object.assign({}, prevState)
+  const nextState = Object.assign({}, state)
   switch (action.type) {
     case 'inputChange':
       nextState.inputValue = action.payload
       return nextState
     case 'addTodoItem':
-      nextState.list.push(prevState.inputValue)
+      nextState.list.push(state.inputValue)
       nextState.inputValue = ''
       return nextState
     default:
-      return prevState
+      return state
   }
 }
 
@@ -84,6 +86,7 @@ class TodoList extends Component {
     // 通过getState获取Redux中的数据
     this.state = store.getState()
     this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
     this.storeChange = this.storeChange.bind(this)
   }
   handleInputChange(e) {
@@ -97,9 +100,7 @@ class TodoList extends Component {
     store.dispatch(action)
   }
   handleClick() {
-    store.dispatch({
-      type: 'addTodoItem',
-    })
+    store.dispatch({ type: 'addTodoItem' })
   }
   storeChange() {
     this.setState(store.getState())

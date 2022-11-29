@@ -13,10 +13,11 @@ class Demo extends Component {
      */
     this.state = {
       inputValue: '',
-      list: ['西瓜', '荔枝', '木瓜']
+      list: ['西瓜', '荔枝', '木瓜'],
     }
     // react16.3版本之后,通过此方法来创建ref, 然后赋值给一个变量, 通过该ref变量的current属性可以拿到DOM节点或组件的实例
     this.ulDOM = React.createRef()
+    this.handleRemove = this.handleRemove.bind(this)
   }
 
   /**
@@ -41,9 +42,7 @@ class Demo extends Component {
     // this.state.inputValue = e.target.value
 
     // 要这样写才行,是不是觉得和原生小程序很像
-    this.setState({
-      inputValue: e.target.value
-    })
+    this.setState({ inputValue: e.target.value })
 
     // 或者这种函数的写法
     // this.setState((state) => ({
@@ -55,7 +54,7 @@ class Demo extends Component {
     this.setState(
       {
         inputValue: '',
-        list: [...this.state.list, this.state.inputValue]
+        list: [...this.state.list, this.state.inputValue],
       },
       () => {
         /**
@@ -80,9 +79,7 @@ class Demo extends Component {
   handleRemove(index) {
     const list = this.state.list
     list.splice(index, 1)
-    this.setState({
-      list: list
-    })
+    this.setState({ list: list })
   }
   render() {
     return (
@@ -115,7 +112,7 @@ class Demo extends Component {
               content={el}
               index={index}
               key={index}
-              removeItem={() => this.handleRemove(index)}
+              removeItem={this.handleRemove}
             ></DemoChild>
           ))}
         </ul>

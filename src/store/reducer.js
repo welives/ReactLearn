@@ -13,10 +13,10 @@ const defaultState = {
     '下班回家',
   ],
 }
-export default (prevState = defaultState, action) => {
+export default (state = defaultState, action) => {
   //! Reducer里的state是只读，切忌严禁在这里修改state的值
   // 通过action.type来判断要进行的操作
-  const nextState = Object.assign({}, prevState)
+  const nextState = Object.assign({}, state)
   switch (action.type) {
     case INPUT_CHANGE:
       nextState.inputValue = action.value
@@ -29,6 +29,6 @@ export default (prevState = defaultState, action) => {
       nextState.list.splice(action.value, 1)
       return nextState
     default:
-      return prevState
+      return state
   }
 }

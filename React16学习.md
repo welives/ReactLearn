@@ -80,9 +80,7 @@ class App extends Component {
     // this.state.inputValue = e.target.value
 
     // 要这样写才行,是不是觉得和原生小程序很像
-    this.setState({
-      inputValue: e.target.value
-    })
+    this.setState({ inputValue: e.target.value })
 
     // 或者这种函数的写法
     this.setState((state) => ({
@@ -106,7 +104,7 @@ class App extends Component {
    *
    * 要解决这个this指向问题，有三种办法
    * ① 可以使用bind()将该方法绑定给指向类组件实例对象的this，即 onChange={this.inputChange.bind(this)}
-   * ② 可以使用箭头函数把实例方法包装起来，即 onChange={(e) => this.inputChange(e)}
+   * ② 可以使用箭头函数把实例方法包装起来，即 onChange={() => this.inputChange()}
    * ③ 在定义方法的时候使用箭头函数，即 inputChange = () => {}
    */
   inputChange(e) {
@@ -131,9 +129,7 @@ class Demo extends Component {
   handleRemove(index) {
     const list = this.state.list
     list.splice(index, 1)
-    this.setState({
-      list: list
-    })
+    this.setState({ list: list })
   }
   render() {
     return (
@@ -159,13 +155,12 @@ class Demo extends Component {
     this.state = {
       list: ['西瓜', '荔枝', '木瓜']
     }
+    this.handleRemove = this.handleRemove.bind(this)
   }
   handleRemove(index) {
     const list = this.state.list
     list.splice(index, 1)
-    this.setState({
-      list: list
-    })
+    this.setState({ list: list })
   }
   render() {
     return (
@@ -175,7 +170,7 @@ class Demo extends Component {
             content={el}
             index={index}
             key={index}
-            removeItem={() => this.handleRemove(index)}
+            removeItem={this.handleRemove}
           ></DemoChild>
         ))}
       </ul>
@@ -236,9 +231,7 @@ class Demo extends Component {
     this.ulDOM = React.createRef()
   }
   inputChange(e) {
-    this.setState({
-      inputValue: this.input.value
-    })
+    this.setState({ inputValue: this.input.value })
   }
   handleClick = () => {
     this.setState(
