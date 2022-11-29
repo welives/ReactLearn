@@ -13,7 +13,8 @@ mkdir src/store
 touch src/store/index.js
 touch src/store/reducer.js
 ```
-> 接着编辑reducer.js
+
+> 接着编辑 reducer.js
 ```js
 const defaultState = {}
 export default (state = defaultState, action) => {
@@ -21,7 +22,7 @@ export default (state = defaultState, action) => {
 }
 ```
 
-> 编辑index.js
+> 编辑 index.js
 ```js
 import { createStore } from 'redux'
 import reducer from './reducer'
@@ -163,13 +164,18 @@ class TodoList extends Component {
 }
 ```
 
+------
+
 ## redux-thunk的安装和配置
 项目根目录下打开命令行终端，执行下面的命令进行安装
 ```
 npm i redux-thunk
 ```
-配置：
+
+<font color=red>配置：</font>
+
 ```js
+// 编辑 index.js
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import reducer from './reducer'
@@ -185,29 +191,17 @@ export default store
 ```
 
 ## redux-thunk的使用
+① 在TodoList组件生命周期调用 action 中的异步请求
 ```js
 class TodoList extends Component {
   ...
   componentDidMount() {
     // 组件挂载完成后订阅Redux的状态变化
     store.subscribe(this.storeChange)
-    fetch(
-      'https://mock.mengxuegu.com/mock/6385a5229433403d6c068a17/example/react_learn'
-    ).then(async (res) => {
-      const { status, result } = await res.json()
-      if (status === 'success') {
-        store.dispatch(Actions.getList(result.data))
-      }
-    })
+    store.dispatch(Actions.getListAsync())
   }
   ...
 }
-// ① 把TodoList组件生命周期中的异步请求改成如下
-  componentDidMount() {
-    // 组件挂载完成后订阅Redux的状态变化
-    store.subscribe(this.storeChange)
-    store.dispatch(Actions.getListAsync())
-  }
 ```
 
 ② 把原先生命周期中的异步请求放到 action 中执行
@@ -230,5 +224,75 @@ class Actions {
       }
     })
   }
+}
+```
+
+------
+
+## redux-saga的安装和配置
+项目根目录下打开命令行终端，执行下面的命令进行安装
+```
+npm i redux-saga
+```
+
+<font color=red>配置：</font>
+
+```js
+// 在store目录下新建 sagas.js
+export default function* saga() {}
+
+// 编辑 index.js
+import { createStore, applyMiddleware, compose } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+import reducer from './reducer'
+import saga from './sagas'
+
+// 判断redux浏览器插件和redux包中哪个有组合函数
+const reduxCompose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+  : compose
+const sagaMiddleware = createSagaMiddleware()
+
+const store = createStore(
+  reducer,
+  reduxCompose(applyMiddleware(sagaMiddleware))
+)
+sagaMiddleware.run(saga)
+
+export default store
+```
+
+## redux-saga的使用
+① 编辑 sagas.js 的内容为：
+```js
+import { takeEvery, put } from 'redux-saga/effects'
+import { GET_LIST } from './actionTypes'
+import Actions from './actions'
+
+function* getList() {
+  const data = yield fetch(
+    'https://mock.mengxuegu.com/mock/6385a5229433403d6c068a17/example/react_learn'
+  ).then(async (res) => {
+    const { status, result } = await res.json()
+    return status === 'success' ? result.data : []
+  })
+  yield put(Actions.getList(data))
+}
+
+export default function* saga() {
+  yield takeEvery(GET_LIST, getList)
+}
+```
+
+② 在TodoList组件生命周期调用 action
+```js
+class TodoList extends Component {
+  ...
+  componentDidMount() {
+    // 组件挂载完成后订阅Redux的状态变化
+    store.subscribe(this.storeChange)
+    store.dispatch(Actions.getList())
+  }
+  ...
 }
 ```

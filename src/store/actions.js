@@ -10,6 +10,9 @@ class Actions {
   addTodoItem = (value) => ({ type: ADD_TODO_ITEM, value })
   removeTodoItem = (value) => ({ type: REMOVE_TODO_ITEM, value })
   getList = (value) => ({ type: GET_LIST, value })
+  /**
+   * redux-thunk 异步请求演示
+   */
   getListAsync = () => (dispatch) => {
     fetch(
       'https://mock.mengxuegu.com/mock/6385a5229433403d6c068a17/example/react_learn'
