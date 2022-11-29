@@ -1,3 +1,4 @@
+import { INPUT_CHANGE, ADD_TODO_ITEM, REMOVE_TODO_ITEM } from './actionTypes'
 const defaultState = {
   inputValue: '',
   list: [
@@ -17,15 +18,15 @@ export default (prevState = defaultState, action) => {
   // 通过action.type来判断要进行的操作
   const nextState = Object.assign({}, prevState)
   switch (action.type) {
-    case 'inputChange':
-      nextState.inputValue = action.payload
+    case INPUT_CHANGE:
+      nextState.inputValue = action.value
       return nextState
-    case 'addTodoItem':
-      nextState.list.push(prevState.inputValue)
+    case ADD_TODO_ITEM:
+      nextState.list.push(action.value)
       nextState.inputValue = ''
       return nextState
-    case 'removeTodoItem':
-      nextState.list.splice(action.payload, 1)
+    case REMOVE_TODO_ITEM:
+      nextState.list.splice(action.value, 1)
       return nextState
     default:
       return prevState

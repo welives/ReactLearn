@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Input, Button, List } from 'antd'
 import store from '../store/index'
+import Actions from '../store/actions'
 
 class TodoList extends Component {
   constructor(props) {
@@ -12,25 +13,14 @@ class TodoList extends Component {
     this.storeChange = this.storeChange.bind(this)
   }
   handleInputChange(e) {
-    const action = {
-      // 必填项,用来告诉Redux本次action要修改的是哪个state
-      type: 'inputChange',
-      // 非必需,不一定非要叫payload,也可以是data或者value之类你喜欢的键名,用来传递新的state值
-      payload: e.target.value,
-    }
     // 通过dispatch分发state变更操作到Store
-    store.dispatch(action)
+    store.dispatch(Actions.inputChange(e.target.value))
   }
   handleClick() {
-    store.dispatch({
-      type: 'addTodoItem',
-    })
+    store.dispatch(Actions.addTodoItem(this.state.inputValue))
   }
   handleRemove(index) {
-    store.dispatch({
-      type: 'removeTodoItem',
-      payload: index,
-    })
+    store.dispatch(Actions.removeTodoItem(index))
   }
   storeChange() {
     this.setState(store.getState())
