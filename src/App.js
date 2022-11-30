@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-// import Demo from './pages/Demo/index'
-// import TodoList from './components/TodoList'
+import { BrowserRouter, Route, Link } from 'react-router-dom'
 import TodoList from './pages/TodoList/index'
+import Home from './pages/Home/index'
+import Demo from './pages/Demo/index'
+import Test from './pages/Test/index'
 import './App.css'
 
 /**
@@ -14,10 +16,26 @@ class App extends Component {
    */
   render() {
     return (
-      <div>
-        {/* <Demo></Demo> */}
-        <TodoList></TodoList>
-      </div>
+      <BrowserRouter>
+        <ul>
+          <li>
+            <Link to="/">首页</Link>
+          </li>
+          <li>
+            <Link to="/test">测试</Link>
+          </li>
+          <li>
+            <Link to="/demo">Demo</Link>
+          </li>
+          <li>
+            <Link to="/todo">TodoList</Link>
+          </li>
+        </ul>
+        <Route path="/" exact component={Home}></Route>
+        <Route path="/test/:id" component={Test}></Route>
+        <Route path="/demo" component={Demo}></Route>
+        <Route path="/todo" component={TodoList}></Route>
+      </BrowserRouter>
     )
   }
 }

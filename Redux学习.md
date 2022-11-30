@@ -1,6 +1,7 @@
-# Redux学习
+# Redux 学习
 
 ## 安装
+项目根目录下打开命令行终端，执行下面的命令进行安装，笔者学习时的版本为<font color=red>4.2.0</font>
 ```
 npm i redux
 ```
@@ -168,7 +169,7 @@ class TodoList extends Component {
 ------
 
 ## redux-thunk的安装和配置
-项目根目录下打开命令行终端，执行下面的命令进行安装
+项目根目录下打开命令行终端，执行下面的命令进行安装，笔者学习时的版本为<font color=red>2.4.2</font>
 ```
 npm i redux-thunk
 ```
@@ -231,7 +232,7 @@ class Actions {
 ------
 
 ## redux-saga的安装和配置
-项目根目录下打开命令行终端，执行下面的命令进行安装
+项目根目录下打开命令行终端，执行下面的命令进行安装，笔者学习时的版本为<font color=red>1.2.1</font>
 ```
 npm i redux-saga
 ```
@@ -303,7 +304,7 @@ class TodoList extends Component {
 ------
 
 ## react-redux的安装和使用
-项目根目录下打开命令行终端，执行下面的命令进行安装
+项目根目录下打开命令行终端，执行下面的命令进行安装，笔者学习时的版本为<font color=red>8.0.5</font>
 ```
 npm i react-redux
 ```

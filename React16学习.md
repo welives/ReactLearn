@@ -8,7 +8,7 @@ npx create-react-app Learn
 <font color=red>本文档创建时，React已经发布到18.2了，所以需要对脚手架创建的工程依赖进行降级，步骤如下：</font>
 - ① 删除工程目录下的`node_modules`文件夹
 - ② 清理package.json中React16的非必需依赖，只保留react、react-dom和react-scripts
-- ③ 重新安装React16的某个版本，例如：
+- ③ 重新安装React16的某个版本，例如笔者选择的版本如下：
 ```
 npm i react@16.8.6 react-dom@16.8.6 react-scripts@3.0.0
 ```
@@ -438,3 +438,9 @@ class TodoList extends Component {
 |状态管理|无状态，不能使用setState()|组件之间访问store并维持状态|
 |生命周期|不能使用|可以使用|
 |调用方式|无需实例化|实例化|
+
+## useRef()和createRef()的区别
+- createRef 会在组件每次渲染时都返回一个新的引用，只能在类组件中使用
+- 而 useRef 只会在组件首次渲染时创建，在组件的整个生命周期中都保持相同的引用，只能在函数组件中使用
+> useRef常见的一个使用场景是：组件初始化时 保存一个初始值，由于其是组件生命周期中始终是同一个引用，所以对于想要执行一次的操作，可以通过useRef控制
+
