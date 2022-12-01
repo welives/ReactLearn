@@ -6,11 +6,13 @@
 npx create-react-app Learn
 ```
 <font color=red>本文档创建时，React已经发布到18.2了，所以需要对脚手架创建的工程依赖进行降级，步骤如下：</font>
-- ① 删除工程目录下的`node_modules`文件夹
-- ② 清理package.json中React16的非必需依赖，只保留react、react-dom和react-scripts
+- ① 删除工程目录下的`node_modules`文件夹，删除package-lock.json文件(如果有的话)
+- ② 清理package.json中一些用不到的依赖，只保留react、react-dom和react-scripts
 - ③ 重新安装React16的某个版本，例如笔者选择的版本如下：
+
+> 这段命令的意思是安装React16的最后一个发布版本，安装react-scripts 大版本4下的最后一个版本。选择React16作为本文档的学习参考版本的原因是，React16.8推出了个重要的更新功能(也就是Hooks)，颠覆了以前的组件写法，所以React16是个承上启下的重要大版本。
 ```
-npm i react@16.8.6 react-dom@16.8.6 react-scripts@3.0.0
+npm i react@16.x react-dom@16.x react-scripts@4.x
 ```
 
 - ④ 修改入口文件 index.js

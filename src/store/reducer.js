@@ -8,7 +8,8 @@ const defaultState = {
   inputValue: '',
   list: [],
 }
-export default (state = defaultState, action) => {
+
+const reducer = (state = defaultState, action) => {
   //! Reducer里的state是只读属性，严禁在这里修改state的值，因为它是一个纯函数
   // 通过action.type来判断要进行的操作
   const nextState = Object.assign({}, state)
@@ -30,3 +31,5 @@ export default (state = defaultState, action) => {
       return state
   }
 }
+
+export default reducer

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, Button, List } from 'antd'
 
-export default function (props) {
+export default function UI(props) {
   const { inputValue, list, handleInputChange, handleClick, handleRemove } =
     props
   return (
