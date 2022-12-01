@@ -446,3 +446,22 @@ class TodoList extends Component {
 - 而 useRef 只会在组件首次渲染时创建，在组件的整个生命周期中都保持相同的引用，只能在函数组件中使用
 > useRef常见的一个使用场景是：组件初始化时 保存一个初始值，由于其是组件生命周期中始终是同一个引用，所以对于想要执行一次的操作，可以通过useRef控制
 
+------
+
+## React Hooks
+React Hooks不能出现在条件判断语句中，因为它必须有完全一样的渲染顺序。
+### ① useState
+> useState相当于constructor，它的作用是在函数组件中用来声明并初始化状态变量
+```js
+// 类组件
+constructor(props) {
+  super(props)
+  this.state = {
+    count: 0,
+  }
+}
+
+// 函数组件
+// useState 接收的参数是状态的初始值，它返回一个数组，这个数组的下标0是当前的状态值，下标1是可以改变状态值的方法函数。
+const [count, setCount] = useState(0)
+```

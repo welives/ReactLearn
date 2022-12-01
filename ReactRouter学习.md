@@ -1,4 +1,4 @@
-# ReactRouter 学习
+# React Router 学习
 
 ## 安装
 项目根目录下打开命令行终端，执行下面的命令进行安装，笔者学习时的版本为<font color=red>5.3.4</font>

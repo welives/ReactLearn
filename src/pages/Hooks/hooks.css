@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+.main {
+  display: grid;
+  grid-template-columns: 15% 85%;
+}
+.leftSide {
+  display: grid;
+  grid-template-rows: 100%;
+  background-color: #f3f4f7;
+}
+.leftSide ul {
+  height: 100%;
+  margin: 0;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5rem;
+}
+.leftSide li {
+  padding: 1rem 0;
+  list-style: none;
+  cursor: pointer;
+}
+.rightSide {
+  padding-left: 1rem;
+}
+.rightContent {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
