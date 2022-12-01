@@ -4,6 +4,7 @@ import TodoList from './pages/TodoList/index'
 import Home from './pages/Home/index'
 import Demo from './pages/Demo/index'
 import Test from './pages/Test/index'
+import Layout from './pages/Layout'
 import './App.css'
 
 /**
@@ -30,11 +31,15 @@ class App extends Component {
           <li>
             <Link to="/todo">TodoList</Link>
           </li>
+          <li>
+            <Link to="/layout">Layout</Link>
+          </li>
         </ul>
         <Route path="/" exact component={Home}></Route>
         <Route path="/test/:id" component={Test}></Route>
         <Route path="/demo" component={Demo}></Route>
         <Route path="/todo" component={TodoList}></Route>
+        <Route path="/layout" component={Layout}></Route>
       </BrowserRouter>
     )
   }
