@@ -7,8 +7,9 @@ npm i react-router-dom
 ```
 
 ## 使用
+> Switch的作用是只渲染当前匹配到的路由组件
 ```js
-import { BrowserRouter, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 ...
 class App extends Component {
   render() {
@@ -28,10 +29,12 @@ class App extends Component {
             <Link to="/todo">TodoList</Link>
           </li>
         </ul>
-        <Route path="/" exact component={Home}></Route>
-        <Route path="/test/:id" component={Test}></Route>
-        <Route path="/demo" component={Demo}></Route>
-        <Route path="/todo" component={TodoList}></Route>
+        <Switch>
+          <Route path="/" exact component={Home}></Route>
+          <Route path="/test/:id" component={Test}></Route>
+          <Route path="/demo" component={Demo}></Route>
+          <Route path="/todo" component={TodoList}></Route>
+        </Switch>
       </BrowserRouter>
     )
   }

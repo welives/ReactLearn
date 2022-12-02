@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Link } from 'react-router-dom'
+import { Switch, Route, Link } from 'react-router-dom'
 import Vue from './components/Vue'
 import Express from './components/Express'
 import Flutter from './components/Flutter'
@@ -22,9 +22,11 @@ export default function Video() {
       </div>
       <div className="content">
         <h3>视频教程</h3>
-        <Route path="/layout/video/vue" component={Vue}></Route>
-        <Route path="/layout/video/express" component={Express}></Route>
-        <Route path="/layout/video/flutter" component={Flutter}></Route>
+        <Switch>
+          <Route path="/layout/video/vue" component={Vue}></Route>
+          <Route path="/layout/video/express" component={Express}></Route>
+          <Route path="/layout/video/flutter" component={Flutter}></Route>
+        </Switch>
       </div>
     </div>
   )

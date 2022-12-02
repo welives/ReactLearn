@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 import TodoList from './pages/TodoList/index'
 import Home from './pages/Home/index'
 import Demo from './pages/Demo/index'
@@ -39,12 +39,14 @@ class App extends Component {
             <Link to="/hooks">React Hooks</Link>
           </li>
         </ul>
-        <Route path="/" exact component={Home}></Route>
-        <Route path="/test/:id" component={Test}></Route>
-        <Route path="/demo" component={Demo}></Route>
-        <Route path="/todo" component={TodoList}></Route>
-        <Route path="/layout" component={Layout}></Route>
-        <Route path="/hooks" component={HooksDemo}></Route>
+        <Switch>
+          <Route path="/" exact component={Home}></Route>
+          <Route path="/test/:id" component={Test}></Route>
+          <Route path="/demo" component={Demo}></Route>
+          <Route path="/todo" component={TodoList}></Route>
+          <Route path="/layout" component={Layout}></Route>
+          <Route path="/hooks" component={HooksDemo}></Route>
+        </Switch>
       </BrowserRouter>
     )
   }

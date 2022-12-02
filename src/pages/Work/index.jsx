@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Link } from 'react-router-dom'
+import { Switch, Route, Link } from 'react-router-dom'
 import Talk from './components/Talk'
 import Moyu from './components/Moyu'
 
@@ -18,8 +18,10 @@ export default function Work() {
       </div>
       <div className="content">
         <h3>视频教程</h3>
-        <Route path="/layout/work/moyu" component={Moyu}></Route>
-        <Route path="/layout/work/talk" component={Talk}></Route>
+        <Switch>
+          <Route path="/layout/work/moyu" component={Moyu}></Route>
+          <Route path="/layout/work/talk" component={Talk}></Route>
+        </Switch>
       </div>
     </div>
   )

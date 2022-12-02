@@ -450,6 +450,18 @@ class TodoList extends Component {
 
 ## React Hooks
 React Hooks不能出现在条件判断语句中，因为它必须有完全一样的渲染顺序。
+|class组件|hooks|
+|------|------|
+|constructor|useState|
+|getDerivedStateFromProps|useState 中的 update|
+|getDerivedStateFromError|无|
+|shouldComponentUpdate|useMemo|
+|render|函数本身|
+|componentDidMount|useEffect|
+|componentDidUpdate|useEffect|
+|componentWillUnmount|useEffect中的return函数|
+|componentDidCatch|无|
+
 ### ① useState
 > useState相当于constructor，它的作用是在函数组件中用来声明并初始化状态变量
 ```js
@@ -465,3 +477,6 @@ constructor(props) {
 // useState 接收的参数是状态的初始值，它返回一个数组，这个数组的下标0是当前的状态值，下标1是可以改变状态值的方法函数。
 const [count, setCount] = useState(0)
 ```
+
+### ② useEffect
+> useEffect相当于类组件中的`componentDidMount`和`componentDidUpdate`两个生命周期，通过`return () => {}`的方式解绑生命周期，相当于类组件中的`componentWillUnmount`
