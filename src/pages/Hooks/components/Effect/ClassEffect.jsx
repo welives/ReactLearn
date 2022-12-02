@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import { Input } from 'antd'
 
-export default class ClassEffect extends Component {
+class ClassEffect extends Component {
   constructor(props) {
     super(props)
     this.state = { msg: '' }
@@ -14,6 +15,12 @@ export default class ClassEffect extends Component {
   }
   componentWillUnmount() {
     console.log('传统写法componentWillUnmount：组件将要卸载')
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.msg !== this.state.msg) {
+      return true
+    }
+    return false
   }
   render() {
     return (
@@ -28,3 +35,5 @@ export default class ClassEffect extends Component {
     )
   }
 }
+
+export default withRouter(ClassEffect)

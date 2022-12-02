@@ -463,7 +463,9 @@ React Hooks不能出现在条件判断语句中，因为它必须有完全一样
 |componentDidCatch|无|
 
 ### ① useState
-> useState相当于constructor，它的作用是在函数组件中用来声明并初始化状态变量
+> useState相当于constructor，它的作用是在函数式组件中用来声明并初始化状态变量
+- 在初始渲染期间，返回的状态 (state) 与传入的第一个参数 (initialState) 值相同。
+- 在后续的重新渲染中，useState返回的第一个值将始终是更新后最新的 state。
 ```js
 // 类组件
 constructor(props) {
@@ -474,9 +476,33 @@ constructor(props) {
 }
 
 // 函数组件
-// useState 接收的参数是状态的初始值，它返回一个数组，这个数组的下标0是当前的状态值，下标1是可以改变状态值的方法函数。
+// useState 接收的参数是状态的初始值或最新值，它返回一个数组，这个数组的下标0是新的状态值，下标1是可以改变状态值的方法函数。
 const [count, setCount] = useState(0)
 ```
 
 ### ② useEffect
 > useEffect相当于类组件中的`componentDidMount`和`componentDidUpdate`两个生命周期，通过`return () => {}`的方式解绑生命周期，相当于类组件中的`componentWillUnmount`
+- 默认情况下，第一次渲染之后和每次更新之后都会运行 useEffect
+- React 会等待浏览器完成画面渲染之后才会延迟调用useEffect
+- effect 的清除阶段在每次重新渲染时都会执行，而不是只在卸载组件的时候执行一次
+- useEffect会在调用一个新的 effect 之前对前一个 effect 进行清理
+- React 将按照 effect 声明的顺序依次调用组件中的每一个 effect
+- 如果想执行只运行一次的 effect（仅在组件挂载/卸载（mount/unmount）时执行），可以传递一个空数组作为第二个参数。这就告诉 React 你的 effect 不依赖于 props 或 state 中的任何值，所以它永远都不需要重复执行。
+```js
+function FuncEffect() {
+  const [msg, setMsg] = useState('')
+  useEffect(() => {
+    console.log('Hooks新写法useEffect：组件挂载完毕')
+    // 通过返回一个匿名函数来模拟componentWillUnmount生命周期
+    return () => {
+      console.log('Hooks新写法useEffect：组件将要卸载')
+    }
+  }, [])
+  useEffect(() => {
+    console.log('Hooks新写法useEffect：只首次渲染和msg改变时才会触发')
+  }, [msg])
+}
+```
+
+## useContext
+> 跨组件共享数据的钩子函数，接收一个context对象，并返回该对象的当前值。

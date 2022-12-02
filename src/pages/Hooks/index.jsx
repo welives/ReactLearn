@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Link } from 'react-router-dom'
+import { Switch, Route, Link } from 'react-router-dom'
 import EffectExample from './components/Effect'
 import StateExample from './components/State'
 import './hooks.css'
@@ -19,8 +19,10 @@ export default function HooksDemo() {
           </ul>
         </div>
         <div className="rightSide">
-          <Route path="/hooks/state" component={StateExample}></Route>
-          <Route path="/hooks/effect" component={EffectExample}></Route>
+          <Switch>
+            <Route path="/hooks/state" component={StateExample}></Route>
+            <Route path="/hooks/effect" component={EffectExample}></Route>
+          </Switch>
         </div>
       </div>
     </div>
