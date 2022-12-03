@@ -6,7 +6,7 @@ export default function RefExample() {
   return (
     <div className="rightContent">
       <div className="left">
-        <h3>传统写法：类组件中使用ref</h3>
+        <h3>传统写法：类组件中使用createRef</h3>
         <ClassRef></ClassRef>
       </div>
       <div className="right">
