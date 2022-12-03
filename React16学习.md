@@ -572,7 +572,7 @@ const [count, setCount] = useState(0)
 - React 会等待浏览器完成画面渲染之后才会延迟调用useEffect
 - effect 的清除阶段在每次重新渲染时都会执行，而不是只在卸载组件的时候执行一次
 - useEffect会在调用一个新的 effect 之前对前一个 effect 进行清理
-- React 将按照 effect 声明的顺序依次调用组件中的每一个 effect
+- React 将按照 effect 声明的顺序依次调用组件中的每一个 effect，并且内部执行时是异步的
 - 如果想执行只运行一次的 effect（仅在组件挂载/卸载（mount/unmount）时执行），可以传递一个空数组作为第二个参数。这就告诉 React 你的 effect 不依赖于 props 或 state 中的任何值，所以它永远都不需要重复执行。
 ```js
 function FuncEffect() {
@@ -590,6 +590,12 @@ function FuncEffect() {
   ...
 }
 ```
+
+## useLayoutEffect
+> useEffect和useLayoutEffect很像，都是effect钩子。它们俩的不同点是
+- useEffect是异步执行，而useLayoutEffect是同步执行的
+- 两者都是在render之后执行，但useLayoutEffect发生在useEffect之前
+- useLayoutEffect是发生在DOM更新完成后，而useEffect是发生在浏览器渲染结束后
 
 ## useContext
 > 跨组件共享数据的钩子函数，接收一个context对象，并返回该对象的当前值。
@@ -719,3 +725,59 @@ function Number() {
   )
 }
 ```
+
+## useMemo
+> useMemo 返回一个任何值，它接收两个参数：第一个是具有返回值的函数、第二个是依赖项数组
+- useMemo发生在render前，返回一个缓存的数据，且仅在依赖项改变后变化
+- 如果没有提供依赖项数组，useMemo 在每次渲染时都会计算新的值
+- useMemo主要用来解决使用React hooks时产生的无用渲染的性能问题
+- useMemo 是在渲染期间执行的，所以不要在其中执行与渲染无关的操作(指的是副作用)
+```js
+export default function FuncMemo() {
+  const [cat, setCat] = useState('猫猫在睡觉')
+  const [dog, setDog] = useState('狗子也在睡觉')
+  return (
+    <>
+      {/* 想要实现的效果是: 点击猫猫按钮时触发猫猫的行为逻辑 */}
+      <Button type="primary" size="small" onClick={() => setCat(+new Date())}>
+        猫猫
+      </Button>
+      {/* 想要实现的效果是: 点击狗子按钮时不触发猫猫的行为逻辑 */}
+      <Button
+        type="primary"
+        size="small"
+        style={{ marginLeft: '10px' }}
+        onClick={() => setDog(+new Date() + '===>狗子发现屋外有动静')}
+      >
+        狗子
+      </Button>
+      <ChildComponent cat={cat}>{dog}</ChildComponent>
+    </>
+  )
+}
+
+function ChildComponent({ cat, children }) {
+  // 在函数式组件中，因为没有了shouldComponentUpdate生命周期，
+  // 所以在默认的情况下，当父组件中的任何一个state更新时都会触发内部子组件的重新渲染，这会造成不必要的性能损失
+  const catDoSomething = (cat) => {
+    console.log('猫猫睡醒了')
+    return cat + '===>猫猫正在吃小鱼干'
+  }
+  const catBehavior = useMemo(() => catDoSomething(cat), [cat])
+  return (
+    <div>
+      <div style={{ color: 'orange' }}>{catBehavior}</div>
+      <div>{children}</div>
+    </div>
+  )
+}
+```
+
+## useCallback
+> 返回一个 memoized 回调函数。接收的参数和useMemo一样
+- useCallback(fn, deps) 相当于 useMemo(() => fn, deps)
+> 两者的区别是
+- useMemo 的计算结果是 return 回来的值, 主要用于缓存计算结果的值
+- useCallback 的计算结果是 return 回来的函数, 主要用于缓存函数
+
+## useRef

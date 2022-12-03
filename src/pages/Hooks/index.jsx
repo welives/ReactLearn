@@ -4,6 +4,8 @@ import EffectExample from './components/Effect'
 import StateExample from './components/State'
 import ContextExample from './components/Context'
 import ReducerExample from './components/Reducer'
+import MemoExample from './components/Memo'
+import RefExample from './components/Ref'
 import './hooks.css'
 
 export default function HooksDemo() {
@@ -24,6 +26,12 @@ export default function HooksDemo() {
             <li>
               <Link to="/hooks/reducer">useReducer</Link>
             </li>
+            <li>
+              <Link to="/hooks/memo">useMemo</Link>
+            </li>
+            <li>
+              <Link to="/hooks/ref">useRef</Link>
+            </li>
           </ul>
         </div>
         <div className="rightSide">
@@ -32,6 +40,8 @@ export default function HooksDemo() {
             <Route path="/hooks/effect" component={EffectExample}></Route>
             <Route path="/hooks/context" component={ContextExample}></Route>
             <Route path="/hooks/reducer" component={ReducerExample}></Route>
+            <Route path="/hooks/memo" component={MemoExample}></Route>
+            <Route path="/hooks/ref" component={RefExample}></Route>
           </Switch>
         </div>
       </div>
