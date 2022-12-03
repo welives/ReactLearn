@@ -4,7 +4,7 @@ import { Button, InputNumber } from 'antd'
 export default function FuncState() {
   const [count, setCount] = useState(0)
   return (
-    <div>
+    <>
       <Button
         onClick={() => setCount(count - 1)}
         type="primary"
@@ -25,6 +25,6 @@ export default function FuncState() {
         icon="plus"
         shape="circle"
       ></Button>
-    </div>
+    </>
   )
 }

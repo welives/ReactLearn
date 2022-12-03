@@ -441,6 +441,94 @@ class TodoList extends Component {
 |生命周期|不能使用|可以使用|
 |调用方式|无需实例化|实例化|
 
+## React.createContext
+> 创建一个 Context 对象，该对象会返回两个组件，其中Provider 提供数据, Consumer 消费数据。
+```js
+// ① 创建一个 Context对象，并传入一个默认值
+const CountContext = createContext({
+  getCounter: (type) => store.dispatch(Actions.getCounter(type)),
+})
+// ② 使用Context对象的Provider组件来包裹消费组件,通过value传递state给消费组件
+export default class ClassReducer extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { count: store.getState().count }
+    this.storeChange = this.storeChange.bind(this)
+  }
+  // 使用 static 这个类属性来 contextType 后，便可以使用 this.context 来获取最近 Context 上的值，可以在任何生命周期中访问到它，包括 render 函数中
+  static contextType = CountContext
+  storeChange() {
+    this.setState({ count: store.getState().count })
+  }
+  componentDidMount() {
+    store.subscribe(this.storeChange)
+  }
+  render() {
+    return (
+      <CountContext.Provider
+        value={{ ...this.context, count: this.state.count }}
+      >
+        {/* 消费组件不管嵌套得多深都能通过 useContext 拿到state */}
+        <Counter></Counter>
+      </CountContext.Provider>
+    )
+  }
+}
+// ③ 定义消费组件
+class Counter extends Component {
+  render() {
+    return (
+      <Buttons>
+        <Number></Number>
+      </Buttons>
+    )
+  }
+}
+// ④ 消费组件通过 this.context拿到共享的数据
+class Buttons extends Component {
+  static contextType = CountContext
+  render() {
+    return (
+      <div>
+        <Button
+          type="primary"
+          size="small"
+          icon="minus"
+          shape="circle"
+          onClick={() => this.context.getCounter(DECREMENT)}
+        ></Button>
+        {/* 这里的props.children其实是替换了<Number></Number>，类似Vue中的slot */}
+        {this.props.children}
+        <Button
+          type="primary"
+          size="small"
+          icon="plus"
+          shape="circle"
+          onClick={() => this.context.getCounter(INCREMENT)}
+        ></Button>
+      </div>
+    )
+  }
+}
+// 消费组件获取共享数据的另一种写法
+class Number extends Component {
+  render() {
+    return (
+      <CountContext.Consumer>
+        {(context) => (
+          <InputNumber
+            disabled
+            style={{ margin: '0 10px' }}
+            defaultValue={context.count}
+            value={context.count}
+          ></InputNumber>
+        )}
+      </CountContext.Consumer>
+    )
+  }
+}
+```
+
 ## useRef()和createRef()的区别
 - createRef 会在组件每次渲染时都返回一个新的引用，只能在类组件中使用
 - 而 useRef 只会在组件首次渲染时创建，在组件的整个生命周期中都保持相同的引用，只能在函数组件中使用
@@ -463,16 +551,14 @@ React Hooks不能出现在条件判断语句中，因为它必须有完全一样
 |componentDidCatch|无|
 
 ### ① useState
-> useState相当于constructor，它的作用是在函数式组件中用来声明并初始化状态变量
+> useState相当于constructor，它的作用是在函数式组件中用来声明并初始化state
 - 在初始渲染期间，返回的状态 (state) 与传入的第一个参数 (initialState) 值相同。
 - 在后续的重新渲染中，useState返回的第一个值将始终是更新后最新的 state。
 ```js
 // 类组件
 constructor(props) {
   super(props)
-  this.state = {
-    count: 0,
-  }
+  this.state = { count: 0 }
 }
 
 // 函数组件
@@ -501,13 +587,14 @@ function FuncEffect() {
   useEffect(() => {
     console.log('Hooks新写法useEffect：只首次渲染和msg改变时才会触发')
   }, [msg])
+  ...
 }
 ```
 
 ## useContext
 > 跨组件共享数据的钩子函数，接收一个context对象，并返回该对象的当前值。
 
-① 使用 React Context API，在组件外部建立一个 Context
+① 使用 React Context API，在组件外部建立一个 Context对象
 ```js
 import { createContext } from 'react'
 export default createContext()
@@ -519,8 +606,9 @@ import CountContext from './countContext'
 
 // 父组件
 function FuncContext() {
+  const [count, setCount] = useState(0)
   ...
-  <CountContext.Provider value={count}>
+  <CountContext.Provider value={{ count, setCount }}>
     <Counter></Counter>
   </CountContext.Provider>
   ...
@@ -528,17 +616,106 @@ function FuncContext() {
 
 // 子组件
 function Counter() {
-  const count = useContext(CountContext)
+  const { count, setCount } = useContext(CountContext)
   return (
-    <InputNumber
-      defaultValue={count}
-      disabled
-      style={{ margin: '0 10px' }}
-      value={count}
-    ></InputNumber>
+    <>
+      <Button
+        onClick={() => setCount(count - 1)}
+        type="primary"
+        size="small"
+        icon="minus"
+        shape="circle"
+      ></Button>
+      <InputNumber
+        defaultValue={count}
+        disabled
+        style={{ margin: '0 10px' }}
+        value={count}
+      ></InputNumber>
+      <Button
+        onClick={() => setCount(count + 1)}
+        type="primary"
+        size="small"
+        icon="plus"
+        shape="circle"
+      ></Button>
+    </>
   )
 }
 ```
 
 ## useReducer
-> 这是useState 的替代方案，它第一个是reducer纯函数，第二个是初始state，第三个是修改初始state，用于重置。返回值是一个数组，数组第一个元素是state的当前值，第二个元素是发送action的dispatch函数
+> 这是useState 的替代方案，它可以处理多个用useState实现的逻辑。
+
+> useReducer的第一个参数是reducer纯函数，第二个是初始state，第三个是修改初始state，用于重置。返回值是一个数组，数组第一个元素是state的当前值，第二个元素是发送action的dispatch函数。
+
+<font color=red>下面是一个使用useReducer和useContext代替Redux的案例</font>
+
+```js
+// ① 创建一个 Context对象
+const CountContext = createContext()
+function reducer(state, action) {
+  switch (action.type) {
+    case INCREMENT:
+      return state + 1
+    case DECREMENT:
+      return state - 1
+    default:
+      return state
+  }
+}
+// ② 使用Context对象的Provider组件来包裹消费组件,通过value传递state给消费组件
+export default function FuncReducer() {
+  // 使用useReducer代替useState来创建state
+  const [count, dispatch] = useReducer(reducer, 0)
+  return (
+    <CountContext.Provider value={{ count, dispatch }}>
+      {/* 消费组件不管嵌套得多深都能通过 useContext 拿到state */}
+      <Counter></Counter>
+    </CountContext.Provider>
+  )
+}
+// ③ 定义消费组件
+function Counter() {
+  return (
+    <Buttons>
+      <Number></Number>
+    </Buttons>
+  )
+}
+// ④ 消费组件通过useContext拿到state
+function Buttons(props) {
+  const { dispatch } = useContext(CountContext)
+  return (
+    <>
+      <Button
+        type="primary"
+        size="small"
+        icon="minus"
+        shape="circle"
+        onClick={() => dispatch({ type: DECREMENT })}
+      ></Button>
+      {/* 这里的props.children其实是替换了<Number></Number>，类似Vue中的slot */}
+      {props.children}
+      <Button
+        type="primary"
+        size="small"
+        icon="plus"
+        shape="circle"
+        onClick={() => dispatch({ type: INCREMENT })}
+      ></Button>
+    </>
+  )
+}
+function Number() {
+  const { count } = useContext(CountContext)
+  return (
+    <InputNumber
+      disabled
+      style={{ margin: '0 10px' }}
+      defaultValue={count}
+      value={count}
+    ></InputNumber>
+  )
+}
+```

@@ -3,8 +3,11 @@ import {
   ADD_TODO_ITEM,
   REMOVE_TODO_ITEM,
   GET_LIST,
+  INCREMENT,
+  DECREMENT,
 } from './actionTypes'
 const defaultState = {
+  count: 0,
   inputValue: '',
   list: [],
 }
@@ -27,6 +30,10 @@ const reducer = (state = defaultState, action) => {
     case REMOVE_TODO_ITEM:
       list.splice(action.value, 1)
       return { ...nextState, list: list }
+    case INCREMENT:
+      return { ...nextState, count: nextState.count + 1 }
+    case DECREMENT:
+      return { ...nextState, count: nextState.count - 1 }
     default:
       return state
   }

@@ -6,6 +6,7 @@ import {
 } from './actionTypes'
 
 class Actions {
+  getCounter = (type) => ({ type })
   inputChange = (value) => ({ type: INPUT_CHANGE, value })
   addTodoItem = (value) => ({ type: ADD_TODO_ITEM, value })
   removeTodoItem = (value) => ({ type: REMOVE_TODO_ITEM, value })

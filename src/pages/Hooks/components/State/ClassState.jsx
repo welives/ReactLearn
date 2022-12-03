@@ -4,13 +4,11 @@ import { Button, InputNumber } from 'antd'
 export default class ClassState extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      count: 0,
-    }
+    this.state = { count: 0 }
   }
   render() {
     return (
-      <div>
+      <>
         <Button
           onClick={() => this.setState({ count: this.state.count - 1 })}
           type="primary"
@@ -31,7 +29,7 @@ export default class ClassState extends Component {
           icon="plus"
           shape="circle"
         ></Button>
-      </div>
+      </>
     )
   }
 }

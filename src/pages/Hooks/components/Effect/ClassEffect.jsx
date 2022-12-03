@@ -24,14 +24,12 @@ class ClassEffect extends Component {
   }
   render() {
     return (
-      <div>
-        <Input
-          addonBefore="msg"
-          onChange={(e) => this.setState({ msg: e.target.value })}
-          value={this.state.msg}
-          style={{ width: 200 }}
-        ></Input>
-      </div>
+      <Input
+        addonBefore="msg"
+        onChange={(e) => this.setState({ msg: e.target.value })}
+        value={this.state.msg}
+        style={{ width: 200 }}
+      ></Input>
     )
   }
 }

@@ -6,7 +6,7 @@ export class Test extends Component {
     this.state = {}
   }
   render() {
-    return <div style={{ margin: '10px' }}>test</div>
+    return <div style={{ margin: '10px' }}>{this.props.match.params.id}</div>
   }
   componentDidMount() {
     console.log(this.props.match)

@@ -2,22 +2,19 @@ import React, { useContext, useState } from 'react'
 import { Button, InputNumber } from 'antd'
 import CountContext from './countContext'
 
-function Counter() {
-  const count = useContext(CountContext)
-  return (
-    <InputNumber
-      defaultValue={count}
-      disabled
-      style={{ margin: '0 10px' }}
-      value={count}
-    ></InputNumber>
-  )
-}
-
 export default function FuncContext() {
   const [count, setCount] = useState(0)
   return (
-    <div>
+    <CountContext.Provider value={{ count, setCount }}>
+      <Counter></Counter>
+    </CountContext.Provider>
+  )
+}
+
+function Counter() {
+  const { count, setCount } = useContext(CountContext)
+  return (
+    <>
       <Button
         onClick={() => setCount(count - 1)}
         type="primary"
@@ -25,9 +22,12 @@ export default function FuncContext() {
         icon="minus"
         shape="circle"
       ></Button>
-      <CountContext.Provider value={count}>
-        <Counter></Counter>
-      </CountContext.Provider>
+      <InputNumber
+        defaultValue={count}
+        disabled
+        style={{ margin: '0 10px' }}
+        value={count}
+      ></InputNumber>
       <Button
         onClick={() => setCount(count + 1)}
         type="primary"
@@ -35,6 +35,6 @@ export default function FuncContext() {
         icon="plus"
         shape="circle"
       ></Button>
-    </div>
+    </>
   )
 }

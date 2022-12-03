@@ -14,13 +14,11 @@ export default function FuncEffect() {
     console.log('Hooks新写法useEffect：只首次渲染和msg改变时才会触发')
   }, [msg])
   return (
-    <div>
-      <Input
-        addonBefore="msg"
-        onChange={(e) => setMsg(e.target.value)}
-        value={msg}
-        style={{ width: 200 }}
-      ></Input>
-    </div>
+    <Input
+      addonBefore="msg"
+      onChange={(e) => setMsg(e.target.value)}
+      value={msg}
+      style={{ width: 200 }}
+    ></Input>
   )
 }

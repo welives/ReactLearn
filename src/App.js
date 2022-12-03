@@ -4,7 +4,6 @@ import TodoList from './pages/TodoList/index'
 import Home from './pages/Home/index'
 import Demo from './pages/Demo/index'
 import Test from './pages/Test/index'
-import Layout from './pages/Layout'
 import HooksDemo from './pages/Hooks'
 import './App.css'
 
@@ -33,9 +32,6 @@ class App extends Component {
             <Link to="/todo">TodoList</Link>
           </li>
           <li>
-            <Link to="/layout">Layout</Link>
-          </li>
-          <li>
             <Link to="/hooks">React Hooks</Link>
           </li>
         </ul>
@@ -44,7 +40,6 @@ class App extends Component {
           <Route path="/test/:id" component={Test}></Route>
           <Route path="/demo" component={Demo}></Route>
           <Route path="/todo" component={TodoList}></Route>
-          <Route path="/layout" component={Layout}></Route>
           <Route path="/hooks" component={HooksDemo}></Route>
         </Switch>
       </BrowserRouter>
