@@ -506,3 +506,39 @@ function FuncEffect() {
 
 ## useContext
 > 跨组件共享数据的钩子函数，接收一个context对象，并返回该对象的当前值。
+
+① 使用 React Context API，在组件外部建立一个 Context
+```js
+import { createContext } from 'react'
+export default createContext()
+```
+
+② 组件的关键代码如下
+```js
+import CountContext from './countContext'
+
+// 父组件
+function FuncContext() {
+  ...
+  <CountContext.Provider value={count}>
+    <Counter></Counter>
+  </CountContext.Provider>
+  ...
+}
+
+// 子组件
+function Counter() {
+  const count = useContext(CountContext)
+  return (
+    <InputNumber
+      defaultValue={count}
+      disabled
+      style={{ margin: '0 10px' }}
+      value={count}
+    ></InputNumber>
+  )
+}
+```
+
+## useReducer
+> 这是useState 的替代方案，它第一个是reducer纯函数，第二个是初始state，第三个是修改初始state，用于重置。返回值是一个数组，数组第一个元素是state的当前值，第二个元素是发送action的dispatch函数
