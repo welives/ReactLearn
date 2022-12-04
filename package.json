@@ -1,7 +1,8 @@
 {
-  "name": "demo",
-  "version": "0.1.0",
-  "private": true,
+  "name": "learn-react",
+  "version": "1.0.0",
+  "description": "Learning React v16.14.0, Redux v4.2.0 and ReactRouter v5.3.4",
+  "author": "Jandan <334059075@qq.com>",
   "dependencies": {
     "antd": "^3.26.20",
     "react": "^16.14.0",
@@ -12,6 +13,9 @@
     "redux": "^4.2.0",
     "redux-saga": "^1.2.1",
     "redux-thunk": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,7 +38,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@types/react": "^18.0.25"
-  }
+  "license": "MIT"
 }
