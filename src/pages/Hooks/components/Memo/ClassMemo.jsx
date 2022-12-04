@@ -36,8 +36,11 @@ export default class ClassMemo extends Component {
 }
 
 class ChildComponent extends Component {
-  state = {
-    catBehavior: '',
+  constructor(props) {
+    super(props)
+    this.state = {
+      catBehavior: props.cat + '===>猫猫正在吃小鱼干',
+    }
   }
   catDoSomething(cat) {
     console.log('类组件==========猫猫睡醒了')

@@ -6,6 +6,7 @@ import ContextExample from './components/Context'
 import ReducerExample from './components/Reducer'
 import MemoExample from './components/Memo'
 import RefExample from './components/Ref'
+import CustomExample from './components/Custom'
 import './hooks.css'
 
 export default function HooksDemo() {
@@ -32,6 +33,9 @@ export default function HooksDemo() {
             <li>
               <Link to="/hooks/ref">useRef</Link>
             </li>
+            <li>
+              <Link to="/hooks/custom">customHook</Link>
+            </li>
           </ul>
         </div>
         <div className="rightSide">
@@ -42,6 +46,7 @@ export default function HooksDemo() {
             <Route path="/hooks/reducer" component={ReducerExample}></Route>
             <Route path="/hooks/memo" component={MemoExample}></Route>
             <Route path="/hooks/ref" component={RefExample}></Route>
+            <Route path="/hooks/custom" component={CustomExample}></Route>
           </Switch>
         </div>
       </div>

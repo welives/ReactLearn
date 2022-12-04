@@ -285,7 +285,7 @@ class Demo extends Component {
 }
 ```
 
-## [生命周期](https://zhuanlan.zhihu.com/p/392532496)
+## [生命周期](https://zhuanlan.zhihu.com/p/392532496) [图谱](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)
 ## 在<font color=red>React16.3</font>之前可以分为四个阶段
 ### ① 初始化阶段 Initialization
 组件的构造函数（constuctor）部分，继承React Component，在constructor中通过super(props)调用父类React Component的构造函数，才拥有了之后的生命周期。
@@ -537,7 +537,10 @@ class Number extends Component {
 ------
 
 ## React Hooks
-React Hooks不能出现在条件判断语句中，因为它必须有完全一样的渲染顺序。
+> 只在最顶层使用 Hook，不要在循环，条件或嵌套函数中调用 Hook， 确保总是在你的 React 函数的最顶层调用他们。
+
+> 只能在 React 函数中调用 Hook，不要在普通的 JavaScript 函数中调用 Hook。因为只有函数组件的更新才会触发renderWithHooks函数，处理hooks的相关逻辑
+
 |class组件|hooks|
 |------|------|
 |constructor|useState|
@@ -798,5 +801,30 @@ export default function FuncRef() {
       </Button>
     </div>
   )
+}
+```
+
+## 自定义hook
+> Hook 本质就是 JavaScript 函数，名称以 use 开头，函数内部可用调用其他hook。
+```js
+// 一个监听浏览器窗口大小的自定义hook
+function useWinSize() {
+  const [size, setSize] = useState({
+    width: document.documentElement.clientWidth,
+    height: document.documentElement.clientHeight,
+  })
+  const onResize = useCallback(() => {
+    setSize({
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
+    })
+  }, [])
+  useEffect(() => {
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('resize', onResize)
+    }
+  }, [])
+  return size
 }
 ```
