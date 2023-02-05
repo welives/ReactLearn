@@ -594,6 +594,15 @@ function FuncEffect() {
 }
 ```
 
+> 在 useEffect 中使用异步函数要这样写
+```js
+useEffect(() => {
+  (async () => {
+    ...
+  })()
+}, [])
+```
+
 ## useLayoutEffect
 > useEffect和useLayoutEffect很像，都是effect钩子。它们俩的不同点是
 - useEffect是异步执行，而useLayoutEffect是同步执行的
